@@ -25,11 +25,11 @@ winget install maa
 1. [点此加入 MAA 官方 QQ 群](https://api.maa.plus/MaaAssistantArknights/api/qqgroup/index.html) ;
 2. 在群文件中找到最新的 MAA 安装包进行下载。
 
-#### 通过 [github releases 页面](https://github.com/MaaAssistantArknights/MaaAssistantArknights/releases) 下载最新的 MAA 安装包：
+#### 通过 [github releases 页面](https://github.com/MaaAssistantArknights/MaaAssistantArknights/releases) 下载最新的 MAA 安装包
 
 请确认系统架构并下载对应的安装包。对于大多数阅读本文的Windows用户来说，应为 Windows x64。
 
-#### 通过 [Mirror酱](https://mirrorchyan.com/zh/projects?rid=MAA&source=maagh-release) 下载最新的 MAA 安装包：
+#### 通过 [Mirror酱](https://mirrorchyan.com/zh/projects?rid=MAA&source=maagh-release) 下载最新的 MAA 安装包
 
 请确认系统架构并下载对应的安装包。对于大多数阅读本文的Windows用户来说，应为 Windows x64。
 
@@ -52,7 +52,7 @@ winget install maa
 
 请确认系统架构并下载对应的安装包。对于阅读本文的Mac用户来说，应为 macos universal。
 
-#### 通过 [Mirror酱](https://mirrorchyan.com/zh/projects?rid=MAA&source=maagh-release) 下载最新的 MAA 安装包：
+#### 通过 [Mirror酱](https://mirrorchyan.com/zh/projects?rid=MAA&source=maagh-release) 下载最新的 MAA 安装包
 
 请确认您的芯片类型 (arm/x86) 并下载对应的安装包。
 
