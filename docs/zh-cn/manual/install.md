@@ -73,7 +73,7 @@ MAA GUI **暂未支持** Linux 和其他操作系统。你可以使用 **maa-cli
 下载完成后，你会得到一个 `.zip` 文件。用解压缩软件将其完全解压后，会得到一个包含 MAA 所有文件的文件夹。
 
 ::: warning
-MAA 需要 Visual C++ Redistributable x64（VCRedist x64）和 .NET 10 。请在解压后的 MAA 目录中以管理员身份运行 `DependencySetup_依赖库安装.bat` 来安装这些依赖。安装完成后再运行 `maa.exe`。
+MAA 需要 Visual C++ Redistributable x64（VCRedist x64）和 .NET 8 。请在解压后的 MAA 目录中以管理员身份运行 `DependencySetup_依赖库安装.bat` 来安装这些依赖。安装完成后再运行 `maa.exe`。
 :::
 
 双击 `maa.exe` 即可启动 MAA。
