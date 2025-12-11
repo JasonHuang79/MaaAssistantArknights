@@ -14,7 +14,7 @@ MAA 提供多种下载方式，包括官网下载，从包管理器安装，群�
 
 官网一般会自动选择正确的版本架构，对于大多数阅读本文的用户来说，应为 Windows x64。
 
-#### 通过 [Mirror酱](https://mirrorchyan.com/zh/projects?rid=MAA&source=maagh-release) 下载最新的 MAA 安装包：
+#### 通过 [Mirror酱](https://mirrorchyan.com/zh/projects?rid=MAA&source=maagh-release) 下载最新的 MAA 安装包
 
 请确认系统架构并下载对应的安装包。对于大多数阅读本文的Windows用户来说，应为 Windows x64。
 
@@ -45,7 +45,7 @@ winget install maa
 
 官网一般会自动选择正确的版本架构，对于阅读本文的 macOS 用户来说，应下载 macOS 通用版。
 
-#### 通过 [Mirror酱](https://mirrorchyan.com/zh/projects?rid=MAA&source=maagh-release) 下载最新的 MAA 安装包：
+#### 通过 [Mirror酱](https://mirrorchyan.com/zh/projects?rid=MAA&source=maagh-release) 下载最新的 MAA 安装包
 
 请确认您的芯片架构（arm/x86）并下载对应的安装包。
 
@@ -89,12 +89,13 @@ MAA 需要 Visual C++ Redistributable x64（VCRedist x64）和 .NET 10 。请在
 首次打开可能会被 macOS 的 Gatekeeper 阻止，解决方法如下：
 
 ::: details
+
 - 推荐（安全）：在 Finder 中对 `MAA.app` 右键 -> 选择 “打开”，在弹窗中再次选择 “打开” 来允许该应用运行（仅绕过一次性阻止）。
 - 若仍无法打开，可在 **终端** 使用以下命令（仅在确认来源可信时使用）：
   - 单个应用：`xattr -d com.apple.quarantine /Applications/MAA.app`
   - 递归删除（若需要）：`sudo xattr -r -d com.apple.quarantine /Applications/MAA.app`
 - 不推荐也不安全的方法：全局禁用 Gatekeeper（`sudo spctl --master-disable`），请勿在常规环境中使用。
-:::
+  :::
 
 ## 后续步骤
 
