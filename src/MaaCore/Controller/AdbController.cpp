@@ -1409,8 +1409,11 @@ bool asst::AdbController::connect(const std::string& adb_path, const std::string
                 m_conn_ctx.display_id = display_id_pipe_str.substr(last + 1);
             }
         }
-        // 去掉换行
-        m_conn_ctx.display_id.pop_back();
+        // 去掉尾随换行/回车（注意回落为 "0" 时本身无换行，不可无条件 pop_back）
+        while (!m_conn_ctx.display_id.empty() &&
+               (m_conn_ctx.display_id.back() == '\n' || m_conn_ctx.display_id.back() == '\r')) {
+            m_conn_ctx.display_id.pop_back();
+        }
     }
 
     if (need_exit()) {

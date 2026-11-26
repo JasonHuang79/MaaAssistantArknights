@@ -28,6 +28,10 @@ public:
 
     virtual bool connect(const std::string& adb_path, const std::string& address, const std::string& config) override;
 
+    virtual bool screencap(cv::Mat& image_payload, bool allow_reconnect = false) override;
+
+    virtual std::pair<int, int> get_screen_res() const noexcept override;
+
     virtual bool click(const Point& p) override;
 
     virtual bool swipe(
@@ -66,6 +70,7 @@ private:
 
     bool m_wsa_win32_input_ready = false;
     bool m_adb_touch_fallback = false;
+    std::pair<int, int> m_wsa_frame_res { 0, 0 };
     std::optional<WsaWindowRect> m_cached_task_bounds;
     std::optional<WsaWindowRect> m_last_win32_rect;
 };

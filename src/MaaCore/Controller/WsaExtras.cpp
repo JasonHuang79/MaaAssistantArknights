@@ -140,7 +140,32 @@ std::string get_window_aumid(HWND hwnd)
     return aumid;
 }
 
-bool is_wsa_utility_window(const std::string& title, const std::string& aumid)
+std::string get_window_class_utf8(HWND hwnd)
+{
+    std::wstring buf(256, L'\0');
+    int copied = GetClassNameW(hwnd, buf.data(), static_cast<int>(buf.size()));
+    if (copied <= 0) {
+        return {};
+    }
+    buf.resize(static_cast<size_t>(copied));
+    return wide_to_utf8(buf);
+}
+
+bool is_wsa_ignored_class(const std::string& class_name)
+{
+    if (class_name.empty()) {
+        return false;
+    }
+    // 跳过 WSA 启动闪屏窗口（如 "com.hypergryph.arknights(splash)"）及输入法/辅助浮窗
+    if (contains_case_insensitive(class_name, "(splash)") ||
+        contains_case_insensitive(class_name, "uac_inputindicator") ||
+        contains_case_insensitive(class_name, "uac input indicator")) {
+        return true;
+    }
+    return false;
+}
+
+bool is_wsa_utility_window(const std::string& title, const std::string& aumid, const std::string& class_name)
 {
     static const std::array<std::string_view, 8> kUtilityTitles = {
         "Windows Subsystem for Android",
@@ -161,6 +186,13 @@ bool is_wsa_utility_window(const std::string& title, const std::string& aumid)
         if (contains_case_insensitive(aumid, "com.android.settings") ||
             contains_case_insensitive(aumid, "com.android.documentsui") ||
             contains_case_insensitive(aumid, "com.microsoft.windows.homeapp")) {
+            return true;
+        }
+    }
+    if (!class_name.empty()) {
+        if (contains_case_insensitive(class_name, "com.android.settings") ||
+            contains_case_insensitive(class_name, "com.android.documentsui") ||
+            contains_case_insensitive(class_name, "com.microsoft.windows.homeapp")) {
             return true;
         }
     }
@@ -188,6 +220,7 @@ std::vector<std::string> known_titles_for_package(const std::string& package_nam
 struct WsaWindowCandidate
 {
     HWND hwnd = nullptr;
+    std::string class_name;
     std::string title;
     std::string aumid;
     int width = 0;
@@ -212,6 +245,11 @@ BOOL CALLBACK enum_wsa_windows_proc(HWND hwnd, LPARAM lparam)
         return TRUE;
     }
 
+    std::string class_name = get_window_class_utf8(hwnd);
+    if (is_wsa_ignored_class(class_name)) {
+        return TRUE;
+    }
+
     RECT client_rect {};
     if (!GetClientRect(hwnd, &client_rect)) {
         return TRUE;
@@ -225,9 +263,15 @@ BOOL CALLBACK enum_wsa_windows_proc(HWND hwnd, LPARAM lparam)
         }
     }
 
+    std::string title = get_window_title_utf8(hwnd);
+    if (!IsIconic(hwnd) && title.empty() && (w < 200 || h < 200)) {
+        return TRUE;
+    }
+
     WsaWindowCandidate cand;
     cand.hwnd = hwnd;
-    cand.title = get_window_title_utf8(hwnd);
+    cand.class_name = std::move(class_name);
+    cand.title = std::move(title);
     cand.aumid = get_window_aumid(hwnd);
     cand.width = w;
     cand.height = h;
@@ -461,10 +505,15 @@ void* WsaExtras::find_wsa_window(const std::string& package_name, const std::str
         return nullptr;
     }
 
-    // 2. 通过窗口 AUMID 精确匹配 Android 包名（不受语言/标题本地化影响）
+    // 2. 通过窗口 AUMID 或 Win32 ClassName 精确匹配 Android 包名（不受语言/标题本地化影响）
     if (!package_name.empty()) {
         for (const auto& c : ctx.candidates) {
             if (wsa_detail::contains_case_insensitive(c.aumid, package_name)) {
+                return c.hwnd;
+            }
+        }
+        for (const auto& c : ctx.candidates) {
+            if (wsa_detail::to_lower_ascii(c.class_name) == wsa_detail::to_lower_ascii(package_name)) {
                 return c.hwnd;
             }
         }
@@ -483,7 +532,7 @@ void* WsaExtras::find_wsa_window(const std::string& package_name, const std::str
     // 4. 兜底：过滤 WSA 工具窗口后，若仅剩一个可见应用窗口则直接绑定
     std::vector<const wsa_detail::WsaWindowCandidate*> app_windows;
     for (const auto& c : ctx.candidates) {
-        if (!wsa_detail::is_wsa_utility_window(c.title, c.aumid)) {
+        if (!wsa_detail::is_wsa_utility_window(c.title, c.aumid, c.class_name)) {
             app_windows.push_back(&c);
         }
     }

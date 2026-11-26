@@ -21,6 +21,7 @@ bool WsaController::connect(const std::string& adb_path, const std::string& addr
 
     m_wsa_win32_input_ready = false;
     m_adb_touch_fallback = false;
+    m_wsa_frame_res = { 0, 0 };
     m_cached_task_bounds.reset();
     m_last_win32_rect.reset();
     release_minitouch();
@@ -36,9 +37,16 @@ bool WsaController::connect(const std::string& adb_path, const std::string& addr
         return false;
     }
 
+    if (m_wsa_extras.inited()) {
+        if (auto sz = m_wsa_extras.client_size()) {
+            m_wsa_frame_res = *sz;
+        }
+    }
+
     if (m_wsa_extras.inited() && m_wsa_extras.input_available()) {
         m_wsa_win32_input_ready = true;
-        LogInfo << "WsaController Win32 input ready" << VAR(m_width) << VAR(m_height);
+        LogInfo << "WsaController Win32 input ready" << VAR(m_width) << VAR(m_height)
+                << VAR(m_wsa_frame_res.first) << VAR(m_wsa_frame_res.second);
         return true;
     }
 
@@ -53,6 +61,32 @@ bool WsaController::connect(const std::string& adb_path, const std::string& addr
     return true;
 }
 
+bool WsaController::screencap(cv::Mat& image_payload, bool allow_reconnect)
+{
+    if (!AdbController::screencap(image_payload, allow_reconnect)) {
+        return false;
+    }
+    if (m_adb.screencap_method == AdbProperty::ScreencapMethod::WsaExtras && !image_payload.empty()) {
+        m_wsa_frame_res = { image_payload.cols, image_payload.rows };
+    }
+    return true;
+}
+
+std::pair<int, int> WsaController::get_screen_res() const noexcept
+{
+    // 保持基类 m_width/m_height 为 Android Display 0 物理尺寸（供 MaaTouch 缩放与边界校验），
+    // 对 ControlScaleProxy 暴露 WsaExtras 实际捕获的自由窗口分辨率，避免 16:10/带鱼屏宿主机误报 Not 16:9。
+    if (m_wsa_frame_res.first > 0 && m_wsa_frame_res.second > 0) {
+        return m_wsa_frame_res;
+    }
+    if (m_wsa_extras.inited()) {
+        if (auto sz = m_wsa_extras.client_size()) {
+            return *sz;
+        }
+    }
+    return AdbController::get_screen_res();
+}
+
 bool WsaController::use_wsa_win32_input() const noexcept
 {
     return m_wsa_win32_input_ready && m_wsa_extras.inited() && m_wsa_extras.input_available() &&
@@ -62,12 +96,13 @@ bool WsaController::use_wsa_win32_input() const noexcept
 Point WsaController::map_to_win32_client(const Point& p) const
 {
     auto size_opt = m_wsa_extras.client_size();
-    if (!size_opt || m_width <= 0 || m_height <= 0) {
+    const auto [src_w, src_h] = get_screen_res();
+    if (!size_opt || src_w <= 0 || src_h <= 0) {
         return p;
     }
     const auto [cw, ch] = *size_opt;
-    int x = static_cast<int>(std::llround(static_cast<double>(p.x) * cw / m_width));
-    int y = static_cast<int>(std::llround(static_cast<double>(p.y) * ch / m_height));
+    int x = static_cast<int>(std::llround(static_cast<double>(p.x) * cw / src_w));
+    int y = static_cast<int>(std::llround(static_cast<double>(p.y) * ch / src_h));
     return Point(std::clamp(x, 0, cw - 1), std::clamp(y, 0, ch - 1));
 }
 
@@ -143,7 +178,8 @@ bool WsaController::refresh_task_bounds_if_needed()
 
 Point WsaController::map_to_task_display(const Point& p)
 {
-    if (m_width <= 0 || m_height <= 0) {
+    const auto [src_w, src_h] = get_screen_res();
+    if (src_w <= 0 || src_h <= 0) {
         return p;
     }
     if (!refresh_task_bounds_if_needed() || !m_cached_task_bounds) {
@@ -151,8 +187,8 @@ Point WsaController::map_to_task_display(const Point& p)
     }
 
     const auto& r = *m_cached_task_bounds;
-    int x = r.left + static_cast<int>(std::llround(static_cast<double>(p.x) * r.width() / m_width));
-    int y = r.top + static_cast<int>(std::llround(static_cast<double>(p.y) * r.height() / m_height));
+    int x = r.left + static_cast<int>(std::llround(static_cast<double>(p.x) * r.width() / src_w));
+    int y = r.top + static_cast<int>(std::llround(static_cast<double>(p.y) * r.height() / src_h));
     return Point(std::clamp(x, r.left, r.right - 1), std::clamp(y, r.top, r.bottom - 1));
 }
 
@@ -188,8 +224,9 @@ bool WsaController::swipe(
         Point c1 = map_to_win32_client(p1);
         Point c2 = map_to_win32_client(p2);
         auto size_opt = m_wsa_extras.client_size();
-        const int cw = size_opt ? size_opt->first : m_width;
-        const int ch = size_opt ? size_opt->second : m_height;
+        const auto [fallback_w, fallback_h] = get_screen_res();
+        const int cw = size_opt ? size_opt->first : fallback_w;
+        const int ch = size_opt ? size_opt->second : fallback_h;
 
         if (!m_wsa_extras.touch_down(0, c1.x, c1.y)) {
             return false;
@@ -374,6 +411,7 @@ void WsaController::clear_info() noexcept
 {
     m_wsa_win32_input_ready = false;
     m_adb_touch_fallback = false;
+    m_wsa_frame_res = { 0, 0 };
     m_cached_task_bounds.reset();
     m_last_win32_rect.reset();
     MaatouchController::clear_info();
