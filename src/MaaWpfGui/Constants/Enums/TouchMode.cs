@@ -46,4 +46,9 @@ public enum TouchMode
     /// ModAVD 宿主侧触控（modavd_extras 库），不可用时 Core 自动降级为 MaaTouch。
     /// </summary>
     ModAvdExtras,
+
+    /// <summary>
+    /// WSA 增强触控（自动换算 WSA freeform 窗口坐标，支持 Win32 宿主输入或 MaaTouch / ADB 自动降级）。
+    /// </summary>
+    WsaExtras,
 }

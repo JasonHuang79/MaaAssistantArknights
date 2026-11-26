@@ -225,6 +225,16 @@ AVD 截圖增強模式在 MaaFramework 中實現，必須選擇 MaaFwAdb 觸控�
 
 `ModAVD 根目錄` 留空時，MAA 只使用 ADB 截圖。
 
+### WSA 視窗截圖增強模式
+
+適用於 Windows Subsystem for Android（WSA），相容 Android 11 / 12L / 13 / 16 等各版本 WSA，無需 Root 或額外第三方函式庫。MAA 透過 Windows Graphics Capture（`FramePool`）直接擷取目標遊戲視窗畫面，不經過 ADB 截圖，且支援同時執行多個伺服器客戶端視窗。
+
+1. `設定` - `連線設定` - `連線類型` 選擇 `WSA`，也可透過 `自動偵測連線` 自動識別正在執行的 `WsaClient` 及其監聽的 ADB 連接埠（預設 `127.0.0.1:58526` 或自訂連接埠）。
+
+2. 勾選 `啟用 WSA 視窗截圖增強`（預設開啟）。通常無需填寫 `WSA 視窗標題`，MAA 會依目前客戶端套件名稱與視窗 AUMID 自動定位遊戲視窗；僅在多開同名視窗時手動指定標題。
+
+3. `觸控模式` 選擇 `WSA 增強觸控`：預設透過 `MaaTouch`（不可用時自動回退 ADB）並依 WSA 自由視窗的即時 `Task bounds` 自動換算座標，無需把遊戲拉伸鋪滿整個虛擬螢幕；勾選 `啟用 WSA 宿主 Win32 輸入` 後可改由宿主側直接向 WSA 視窗傳送 Win32 訊息。
+
 ## 觸控模式
 
 1. [Minitouch](https://github.com/DeviceFarmer/minitouch)：基於 C 語言編寫的 Android 觸控事件驅動程式，透過操作 `evdev` 裝置，提供 Socket 介面供外部程式觸發觸控事件與手勢。自 Android 10 開始，若系統的 SELinux 為 `Enforcing`（強制）模式，Minitouch 將無法運作。<sup>[來源](https://github.com/DeviceFarmer/minitouch?tab=readme-ov-file#for-android-10-and-up)</sup>（預設）
@@ -233,6 +243,7 @@ AVD 截圖增強模式在 MaaFramework 中實現，必須選擇 MaaFwAdb 觸控�
 4. [MaaFwAdb](https://maafw.com/)：呼叫 MaaFramework 控制單元的螢幕截圖和觸控功能。不支援額外滑動：額外滑動是主滑動結束後沿垂直方向追加一小段的 ｢剎車｣ 滑動（軌跡類似拐 90° 的 L 形），用於抵消列表慣性，依賴額外滑動防止拖飛的頁面在該模式下會拖飛。（實驗功能）
 5. MuMu 觸控增強：呼叫 MuMu 模擬器外部渲染處理程序的觸控介面，需勾選 `啟用 MuMu 截圖增強` 後才會出現在觸控模式下拉式選單中，不可用時自動回退為 Minitouch（實驗功能）。需官方版 MuMu V6.3.2 及以上，方舟專版與國際版暫不支援。支援 MuMu ｢應用保活｣（背景掛機）場景下操作。
 6. ModAVD 觸控：透過 ModAVD 內建的 `modavd_extras` 函式庫，經模擬器控制台把觸控送到模擬器自己的虛擬觸控螢幕，客體裡不用執行 MaaTouch。僅 `ModAVD` 連線設定可用，函式庫不支援或不可用時自動回退為 MaaTouch（實驗功能）。
+7. WSA 增強觸控：專為 `WSA` 自由視窗模式設計，自動在遊戲視窗客戶區與 WSA `Display 0` 自由視窗座標之間換算；預設經 MaaTouch（不可用時自動回退 ADB）執行背景點擊，勾選宿主 Win32 輸入後也可直接向 WSA 視窗傳送訊息（實驗功能）。
 
 ## ADB Lite
 

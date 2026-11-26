@@ -35,6 +35,7 @@ public partial class ConnectSettings : NotifyPropertyChangedWithValue, IJsonOnDe
         Extras.LDPlayer.PropertyChanged += Handler.OnPropertyChangedFactory(_bindingPrefix + nameof(ConnectSettings) + "." + nameof(ExtraConfigs) + "." + nameof(Extras.LDPlayer) + ".");
         Extras.Win32Extra.PropertyChanged += Handler.OnPropertyChangedFactory(_bindingPrefix + nameof(ConnectSettings) + "." + nameof(ExtraConfigs) + "." + nameof(Extras.Win32Extra) + ".");
         Extras.ModAvd.PropertyChanged += Handler.OnPropertyChangedFactory(_bindingPrefix + nameof(ConnectSettings) + "." + nameof(ExtraConfigs) + "." + nameof(Extras.ModAvd) + ".");
+        Extras.Wsa.PropertyChanged += Handler.OnPropertyChangedFactory(_bindingPrefix + nameof(ConnectSettings) + "." + nameof(ExtraConfigs) + "." + nameof(Extras.Wsa) + ".");
     }
 
     public void OnDeserialized()
@@ -83,6 +84,9 @@ public partial class ConnectSettings : NotifyPropertyChangedWithValue, IJsonOnDe
 
         [JsonPropertyName("ModAVD")]
         public ModAvdExtra ModAvd { get; set; } = new();
+
+        [JsonPropertyName("WSA")]
+        public WsaExtra Wsa { get; set; } = new();
 
         public Bluestacks BluestacksExtra { get; set; } = new();
 

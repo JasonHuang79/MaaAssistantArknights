@@ -323,6 +323,25 @@
                                 Content="{DynamicResource Common.Select}" />
                         </Grid>
                     </DataTemplate>
+                    <DataTemplate DataType="{x:Type extra:WsaExtra}">
+                        <StackPanel Margin="0,5" d:DataContext="{d:DesignInstance {x:Type extra:WsaExtra}}">
+                            <CheckBox
+                                Margin="0,2"
+                                Content="{DynamicResource Connection.WSA.ExtrasEnabled}"
+                                IsChecked="{Binding Enable}" />
+                            <StackPanel Visibility="{c:Binding Enable}">
+                                <CheckBox
+                                    Margin="0,2"
+                                    Content="{DynamicResource Connection.WSA.ExtrasInputEnabled}"
+                                    IsChecked="{Binding EnableInput}" />
+                                <hc:TextBox
+                                    Margin="0,5"
+                                    hc:InfoElement.Placeholder="{DynamicResource Connection.WSA.WindowName.Placeholder}"
+                                    hc:InfoElement.Title="{DynamicResource Connection.WSA.WindowName}"
+                                    Text="{Binding WindowName}" />
+                            </StackPanel>
+                        </StackPanel>
+                    </DataTemplate>
                     <DataTemplate DataType="{x:Type extra:Win32Extra}">
                         <StackPanel d:DataContext="{d:DesignInstance {x:Type extra:Win32Extra}}">
                             <hc:ComboBox

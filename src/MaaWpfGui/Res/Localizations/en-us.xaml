@@ -843,7 +843,7 @@ Please ensure only the target emulator is running during detection. Running mult
     <system:String x:Key="Connection.Config.Nox">Nox</system:String>
     <system:String x:Key="Connection.Config.PC">Arknights PC Client (Community-maintained)</system:String>
     <system:String x:Key="Connection.Config.SecondResolution">2nd Resolution</system:String>
-    <system:String x:Key="Connection.Config.WSA">Old version of WSA</system:String>
+    <system:String x:Key="Connection.Config.WSA">WSA</system:String>
     <system:String x:Key="Connection.Config.XYAZ">MEmu</system:String>
     <system:String x:Key="Connection.ConnectFailed">Connection Failed</system:String>
     <system:String x:Key="Connection.Connecting">Connecting to emulator……</system:String>
@@ -943,12 +943,23 @@ Note:
     <system:String x:Key="Connection.TouchMode.ModAvdExtras">ModAVD Touch (Experimental)</system:String>
     <system:String x:Key="Connection.TouchMode.MumuExtras">MuMu Touch (Experimental)</system:String>
     <system:String x:Key="Connection.TouchMode.Tip" xml:space="preserve">ADB Input is only for physical devices running an older OS version. Do not use it if other modes work.&#10;ADB Input swipes tend to drift, so swipe speed is set very slow and swipe distances differ from other modes; it cannot be used in scenarios requiring precise coordinate control.&#10;&#10;MaaFwAdb does not support extra swipe, so pages that rely on extra swipe to prevent overshooting will overshoot in this mode.&#10;An extra swipe is a short "brake" swipe appended perpendicular to the end of the main swipe (tracing an L-shaped 90° turn) to counteract list inertia.</system:String>
+    <system:String x:Key="Connection.TouchMode.WsaExtras">WSA Touch (Experimental)</system:String>
     <system:String x:Key="Connection.TryToReconnectByAdb">Attempting to reconnect</system:String>
     <system:String x:Key="Connection.TryToStartEmulator">Trying to start the emulator</system:String>
     <system:String x:Key="Connection.TryToStartPcClient">Trying to start the PC client</system:String>
     <system:String x:Key="Connection.UnzipFailed.Message">Unable to unzip the file, an unexpected error occurred. Please check the logs for more information.</system:String>
     <system:String x:Key="Connection.WindowMinimize">Minimize window</system:String>
     <system:String x:Key="Connection.WindowRestore">Window restore</system:String>
+    <system:String x:Key="Connection.WSA.ExtrasEnabled">Enable WSA Window Screencap Enhanced</system:String>
+    <system:String x:Key="Connection.WSA.ExtrasEnabled.Tip" xml:space="preserve">Captures the WSA game window directly via Windows Graphics Capture (FramePool) without ADB screencap, compatible with Android 11/12L/13/16 WSA.
+Supports running multiple server clients in separate windows without stretching the game across the entire virtual display.</system:String>
+    <system:String x:Key="Connection.WSA.ExtrasInputEnabled">Enable WSA Win32 Host Input (Experimental)</system:String>
+    <system:String x:Key="Connection.WSA.ExtrasInputEnabled.Tip" xml:space="preserve">When checked with "WSA Touch", sends Win32 input messages directly to the WSA window.
+When unchecked, uses MaaTouch with automatic WSA freeform window coordinate mapping.</system:String>
+    <system:String x:Key="Connection.WSA.WindowName">WSA Window Title (Optional)</system:String>
+    <system:String x:Key="Connection.WSA.WindowName.Placeholder">Leave blank to auto-match by package / AUMID</system:String>
+    <system:String x:Key="Connection.WSA.WindowName.Tip" xml:space="preserve">Usually left blank; MAA automatically locates the WSA window for the selected client package.
+Fill this in only if multiple windows share the same title or auto-matching fails.</system:String>
     <system:String x:Key="Copilot.Action.BulletTime">Enter Bullet Time</system:String>
     <system:String x:Key="Copilot.Action.CheckIfStartOver">Check If Restart</system:String>
     <system:String x:Key="Copilot.Action.Click">Click</system:String>

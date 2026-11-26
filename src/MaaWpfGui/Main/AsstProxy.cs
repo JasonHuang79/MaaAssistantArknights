@@ -207,6 +207,11 @@ public class AsstProxy
         AsstSetConnectionExtras("ModAVD", extras);
     }
 
+    private static void AsstSetConnectionExtrasWsa(string extras)
+    {
+        AsstSetConnectionExtras("WSA", extras);
+    }
+
     private static unsafe AsstTaskId AsstAppendTask(AsstHandle handle, string type, string taskParams)
     {
         fixed (byte* ptr1 = EncodeNullTerminatedUtf8(type),
@@ -1381,7 +1386,7 @@ public class AsstProxy
                 default:
                     {
                         // 高配电脑未开截图增强时耗时也常在 100ms 以上，此档不告警，仅提示可优化
-                        if (avgInt >= 100 && SettingsViewModel.ConnectSettings.ScreencapMethod is not ("MumuExtras" or "LDExtras" or "ModAvdExtras"))
+                        if (avgInt >= 100 && SettingsViewModel.ConnectSettings.ScreencapMethod is not ("MumuExtras" or "LDExtras" or "ModAvdExtras" or "WsaExtras"))
                         {
                             AddLog(LocalizationHelper.GetStringFormat("Asst.Connection.FastestWayToScreencap.InfoTip", avgInt), UiLogColor.Info);
                         }
@@ -3556,6 +3561,10 @@ public class AsstProxy
         else if (SettingsViewModel.ConnectSettings.ExtraConfig is ModAvdExtra modAvd)
         {
             AsstSetConnectionExtrasModAvd(modAvd.Config);
+        }
+        else if (SettingsViewModel.ConnectSettings.ExtraConfig is WsaExtra wsa)
+        {
+            AsstSetConnectionExtrasWsa(wsa.Config);
         }
 
         switch (SettingsViewModel.ConnectSettings.ConnectConfig)

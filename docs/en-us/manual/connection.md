@@ -223,6 +223,16 @@ For the [ModAVD](https://github.com/ModAVD/ModAVD) emulator. MAA reads the emula
 
 If `ModAVD root` is left empty, MAA takes screenshots through ADB only.
 
+### WSA Window Screenshot Enhanced Mode
+
+For Windows Subsystem for Android (WSA), compatible with Android 11 / 12L / 13 / 16 WSA without requiring root or external third-party libraries. MAA captures the target game window directly via Windows Graphics Capture (`FramePool`) without ADB screencap, and supports running multiple server client windows simultaneously.
+
+1. In `Settings` - `Connection` - `Connection Preset`, select `WSA`, or use `Auto detect connection` to detect the running `WsaClient` and its listening ADB port (default `127.0.0.1:58526` or custom ports).
+
+2. Check `Enable WSA Window Screencap Enhanced` (enabled by default). `WSA Window Title` can usually be left blank so MAA matches the game window automatically by package name / AUMID; fill it in only when multiple windows share the same title.
+
+3. For `Touch Mode`, select `WSA Touch`: by default it uses `MaaTouch` (with automatic ADB fallback) and maps coordinates dynamically using the WSA freeform `Task bounds`, without stretching the game across the entire virtual display. Checking `Enable WSA Win32 Host Input` optionally sends Win32 input messages directly to the WSA window.
+
 ## Touch Mode
 
 1. [Minitouch](https://github.com/DeviceFarmer/minitouch): An Android touch event handler written in C that operates on `evdev` devices and provides a Socket interface for external programs to trigger touch events and gestures. Starting with Android 10, Minitouch is no longer available when SELinux is in `Enforcing` mode.<sup>[source](https://github.com/DeviceFarmer/minitouch?tab=readme-ov-file#for-android-10-and-up)</sup> (Default)
@@ -231,6 +241,7 @@ If `ModAVD root` is left empty, MAA takes screenshots through ADB only.
 4. [MaaFwAdb](https://maafw.com/): Delegates screenshot and touch commands to MaaFramework's control unit. Extra swipe is not supported: an extra swipe is a short "brake" swipe appended perpendicular to the end of the main swipe (tracing an L-shaped 90° turn), used to counteract list inertia, so pages that rely on it to prevent overshooting will overshoot in this mode. (Experimental)
 5. MuMu Touch Enhancement: Calls the touch interface of MuMu's external renderer process. Only appears in the touch mode dropdown after `Enable MuMu's screenshot enhancement mode` is checked, and automatically falls back to Minitouch when unavailable (experimental). Requires the official MuMu V6.3.2 or above; the Arknights-specific and Global editions are not supported yet. Supports operation in the MuMu "App Keep-Alive" (background keep-alive) scenario.
 6. ModAVD Touch: Sends touches through the emulator console to the emulator's own virtual touch screen, using the `modavd_extras` library that comes with ModAVD, so nothing like MaaTouch runs in the guest. Only for the `ModAVD` connection config; falls back to MaaTouch when the library does not support it or is unavailable (experimental).
+7. WSA Touch: Designed for `WSA` freeform windows; automatically maps coordinates between the game window client area and WSA `Display 0` task bounds. Uses MaaTouch (falling back to ADB if unavailable) by default, or optional Win32 host input when enabled (experimental).
 
 ## ADB Lite
 

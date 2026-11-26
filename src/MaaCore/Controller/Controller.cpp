@@ -31,6 +31,7 @@
 #endif
 #ifdef _WIN32
 #include "Win32Controller.h"
+#include "WsaController.h"
 #endif
 
 #ifdef __ANDROID__
@@ -69,6 +70,10 @@ std::shared_ptr<asst::ControllerAPI>
             return std::make_shared<MaaFwAdbController>(m_callback, m_inst, platform_type);
         case ControllerType::ModAvd:
             return std::make_shared<ModAvdController>(m_callback, m_inst, platform_type);
+#ifdef _WIN32
+        case ControllerType::Wsa:
+            return std::make_shared<WsaController>(m_callback, m_inst, platform_type);
+#endif
 #if ASST_WITH_EMULATOR_EXTRAS
         case ControllerType::Mumu:
             return std::make_shared<MumuController>(m_callback, m_inst, platform_type);
@@ -433,6 +438,11 @@ void asst::Controller::set_touch_mode(const TouchMode& mode) noexcept
     case TouchMode::ModAvdExtras:
         m_controller_type = ControllerType::ModAvd;
         break;
+#ifdef _WIN32
+    case TouchMode::WsaExtras:
+        m_controller_type = ControllerType::Wsa;
+        break;
+#endif
 #if ASST_WITH_EMULATOR_EXTRAS
     case TouchMode::MumuExtras:
         m_controller_type = ControllerType::Mumu;

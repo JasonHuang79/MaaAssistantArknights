@@ -402,6 +402,25 @@ void asst::AdbController::init_modavd_extras(const AdbCfg& adb_cfg, const std::s
     m_modavd_extras.init(modavd_root, address);
 }
 
+#ifdef _WIN32
+void asst::AdbController::init_wsa_extras(const AdbCfg& adb_cfg)
+{
+    bool enable = adb_cfg.extras.get("enable", true);
+    if (!enable) {
+        LogInfo << "WsaExtras disabled by config";
+        return;
+    }
+    std::string window_name = adb_cfg.extras.get("window_name", "");
+    bool enable_input = adb_cfg.extras.get("enable_input", false);
+    std::string package_name = m_conn_ctx.package_name;
+    if (package_name.empty()) {
+        package_name = Config.get_package_name("Official").value_or("com.hypergryph.arknights");
+    }
+    LogInfo << "Init WsaExtras" << VAR(package_name) << VAR(window_name) << VAR(enable_input);
+    m_wsa_extras.init(package_name, window_name, enable_input);
+}
+#endif
+
 void asst::AdbController::close_socket() noexcept
 {
     m_platform_io->close_socket();
@@ -425,6 +444,9 @@ void asst::AdbController::clear_info() noexcept
     m_height = 0;
     m_screen_size = { 0, 0 };
     m_last_fps_check_time = {}; // 重置帧率检测计时，重连后立即检测一次
+#ifdef _WIN32
+    m_wsa_extras.uninit();
+#endif
 }
 
 bool asst::AdbController::inited() const noexcept
@@ -444,6 +466,11 @@ bool asst::AdbController::start_game(const std::string& client_type)
 
     std::string cur_cmd = utils::string_replace_all(m_adb.start, "[PackageName]", package_name.value());
     bool ret = call_command(cur_cmd).has_value();
+#ifdef _WIN32
+    if (m_wsa_extras.inited()) {
+        m_wsa_extras.set_package_name(package_name.value());
+    }
+#endif
 
     return ret;
 }
@@ -826,6 +853,27 @@ bool asst::AdbController::screencap(cv::Mat& image_payload, bool allow_reconnect
             }
         }
 
+#ifdef _WIN32
+        if (m_wsa_extras.inited()) {
+            start_time = steady_clock::now();
+            if (auto image = m_wsa_extras.screencap()) {
+                auto duration = duration_cast<milliseconds>(steady_clock::now() - start_time);
+                if (duration < min_cost) {
+                    fastest_method = AdbProperty::ScreencapMethod::WsaExtras;
+                    m_inited = true;
+                    min_cost = duration;
+                    image_payload = std::move(*image);
+                }
+                LogInfo << "WsaExtras cost" << duration.count() << "ms";
+                all_methods_cost.emplace_back(AdbProperty::ScreencapMethod::WsaExtras, std::to_string(duration.count()));
+            }
+            else {
+                LogInfo << "WsaExtras is not supported (WSA target window not found yet)";
+                all_methods_cost.emplace_back(AdbProperty::ScreencapMethod::WsaExtras, "???");
+            }
+        }
+#endif
+
 #if ASST_WITH_EMULATOR_EXTRAS
         if (m_mumu_extras.inited()) {
             start_time = steady_clock::now();
@@ -873,6 +921,9 @@ bool asst::AdbController::screencap(cv::Mat& image_payload, bool allow_reconnect
             { AdbProperty::ScreencapMethod::RawWithGzip, "RawWithGzip" },
             { AdbProperty::ScreencapMethod::Encode, "Encode" },
             { AdbProperty::ScreencapMethod::ModAvdExtras, "ModAvdExtras" },
+#ifdef _WIN32
+            { AdbProperty::ScreencapMethod::WsaExtras, "WsaExtras" },
+#endif
 #if ASST_WITH_EMULATOR_EXTRAS
             { AdbProperty::ScreencapMethod::MumuExtras, "MumuExtras" },
             { AdbProperty::ScreencapMethod::LDExtras, "LDExtras" },
@@ -928,6 +979,22 @@ bool asst::AdbController::screencap(cv::Mat& image_payload, bool allow_reconnect
                 image_payload = img_opt.value();
             }
         } break;
+#ifdef _WIN32
+        case AdbProperty::ScreencapMethod::WsaExtras: {
+            auto img_opt = m_wsa_extras.screencap();
+            screencap_result = img_opt.has_value() ? ScreencapResult::Success : ScreencapResult::Reprobe;
+
+            if (screencap_result != ScreencapResult::Success && allow_reconnect) {
+                m_wsa_extras.reload();
+                img_opt = m_wsa_extras.screencap();
+                screencap_result = img_opt.has_value() ? ScreencapResult::Success : ScreencapResult::Reprobe;
+            }
+
+            if (screencap_result == ScreencapResult::Success) {
+                image_payload = img_opt.value();
+            }
+        } break;
+#endif
 #if ASST_WITH_EMULATOR_EXTRAS
         case AdbProperty::ScreencapMethod::MumuExtras: {
             auto img_opt = m_mumu_extras.screencap();
@@ -1317,17 +1384,31 @@ bool asst::AdbController::connect(const std::string& adb_path, const std::string
             m_conn_ctx.package_name);
         auto display_id_ret = call_command(display_id_cmd);
         if (!display_id_ret) {
-            return false;
+            if (config == "WSA") {
+                LogInfo << "WSA legacy virtual display query failed, fallback to display 0";
+                m_conn_ctx.display_id = "0";
+            }
+            else {
+                return false;
+            }
         }
-
-        auto& display_id_pipe_str = display_id_ret.value();
-        convert_lf(display_id_pipe_str);
-        auto last = display_id_pipe_str.rfind(':');
-        if (last == std::string::npos) {
-            return false;
+        else {
+            auto& display_id_pipe_str = display_id_ret.value();
+            convert_lf(display_id_pipe_str);
+            auto last = display_id_pipe_str.rfind(':');
+            if (last == std::string::npos) {
+                if (config == "WSA") {
+                    LogInfo << "WSA virtual display not present (modern freeform WSA), using display 0";
+                    m_conn_ctx.display_id = "0";
+                }
+                else {
+                    return false;
+                }
+            }
+            else {
+                m_conn_ctx.display_id = display_id_pipe_str.substr(last + 1);
+            }
         }
-
-        m_conn_ctx.display_id = display_id_pipe_str.substr(last + 1);
         // 去掉换行
         m_conn_ctx.display_id.pop_back();
     }
@@ -1438,6 +1519,11 @@ bool asst::AdbController::connect(const std::string& adb_path, const std::string
     else if (config == "ModAVD") {
         init_modavd_extras(adb_cfg, address);
     }
+#ifdef _WIN32
+    else if (config == "WSA") {
+        init_wsa_extras(adb_cfg);
+    }
+#endif
     if (need_exit()) {
         return false;
     }

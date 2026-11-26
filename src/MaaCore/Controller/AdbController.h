@@ -16,6 +16,9 @@
 #include "LDExtras.h"
 #include "ModAvdExtras.h"
 #include "MumuExtras.h"
+#ifdef _WIN32
+#include "WsaExtras.h"
+#endif
 #include "Utils/StringMisc.hpp"
 
 namespace asst
@@ -165,6 +168,9 @@ protected:
     void init_ld_extras(const AdbCfg& adb_cfg, const std::string& address);
     static std::optional<int> get_ld_index(const std::string& address);
     void init_modavd_extras(const AdbCfg& adb_cfg, const std::string& address);
+#ifdef _WIN32
+    void init_wsa_extras(const AdbCfg& adb_cfg);
+#endif
 
     // 转换 data 中的 CRLF 为 LF：有些模拟器自带的 adb，exec-out 输出的 \n 会被替换成 \r\n，
     // 导致解码错误，所以这里转一下回来（点名批评 mumu 和雷电）
@@ -225,6 +231,9 @@ protected:
             RawWithGzip,
             Encode,
             ModAvdExtras,
+#ifdef _WIN32
+            WsaExtras,
+#endif
 #if ASST_WITH_EMULATOR_EXTRAS
             MumuExtras,
             LDExtras,
@@ -254,6 +263,10 @@ protected:
 
     // 不依赖 3rdparty/EmulatorExtras，三个平台都有
     ModAvdExtras m_modavd_extras;
+
+#ifdef _WIN32
+    WsaExtras m_wsa_extras;
+#endif
 
 #if ASST_WITH_EMULATOR_EXTRAS
     MumuExtras m_mumu_extras;

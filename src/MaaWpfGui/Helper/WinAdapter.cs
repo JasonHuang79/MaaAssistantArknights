@@ -106,6 +106,17 @@ public class WinAdapter
                 continue;
             }
 
+            if (WsaConnection.IsWsaProcessName(process.ProcessName))
+            {
+                var wsaAddress = WsaConnection.GetListeningAdbAddress(process.Id);
+                if (detectedEmulators.Add($"{ConnectConfig.WSA}\n{wsaAddress}"))
+                {
+                    emulators.Add(new DetectedEmulatorInfo(ConnectConfig.WSA, null, wsaAddress));
+                }
+
+                continue;
+            }
+
             if (!_emulatorIdDict.TryGetValue(process.ProcessName, out var emulatorId))
             {
                 continue;

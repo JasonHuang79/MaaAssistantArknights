@@ -843,7 +843,7 @@
     <system:String x:Key="Connection.Config.Nox">夜神模擬器</system:String>
     <system:String x:Key="Connection.Config.PC">明日方舟 PC 端（社群維護）</system:String>
     <system:String x:Key="Connection.Config.SecondResolution">第二解析度</system:String>
-    <system:String x:Key="Connection.Config.WSA">WSA 舊版本</system:String>
+    <system:String x:Key="Connection.Config.WSA">WSA</system:String>
     <system:String x:Key="Connection.Config.XYAZ">逍遙模擬器</system:String>
     <system:String x:Key="Connection.ConnectFailed">連線失敗</system:String>
     <system:String x:Key="Connection.Connecting">正在連線模擬器……</system:String>
@@ -944,12 +944,23 @@ C:\Program Files\Netease\MuMuPlayer
     <system:String x:Key="Connection.TouchMode.ModAvdExtras">ModAVD 觸控（實驗功能）</system:String>
     <system:String x:Key="Connection.TouchMode.MumuExtras">MuMu 觸控增強（實驗功能）</system:String>
     <system:String x:Key="Connection.TouchMode.Tip" xml:space="preserve">ADB Input 僅用於相容系統版本過低的實體機裝置，能用其他模式時不要選擇。&#10;ADB Input 的滑動容易拖飛，為此滑動速度會設定得非常慢，且滑動距離與其他模式不同，需要精確控制座標的場景下無法使用。&#10;&#10;MaaFwAdb 不支援額外滑動，依賴額外滑動防止拖飛的頁面在該模式下會拖飛。&#10;額外滑動是主滑動結束後沿垂直方向追加一小段的 ｢剎車｣ 滑動（軌跡類似拐 90° 的 L 形），用於抵消列表慣性。</system:String>
+    <system:String x:Key="Connection.TouchMode.WsaExtras">WSA 增強觸控（實驗功能）</system:String>
     <system:String x:Key="Connection.TryToReconnectByAdb">正在嘗試重連</system:String>
     <system:String x:Key="Connection.TryToStartEmulator">正在嘗試啟動模擬器</system:String>
     <system:String x:Key="Connection.TryToStartPcClient">正在嘗試啟動 PC 客戶端</system:String>
     <system:String x:Key="Connection.UnzipFailed.Message">無法解壓縮檔案，可能發生意外錯誤。請檢查日誌以取得更多資訊。</system:String>
     <system:String x:Key="Connection.WindowMinimize">視窗最小化</system:String>
     <system:String x:Key="Connection.WindowRestore">視窗復原</system:String>
+    <system:String x:Key="Connection.WSA.ExtrasEnabled">啟用 WSA 視窗截圖增強</system:String>
+    <system:String x:Key="Connection.WSA.ExtrasEnabled.Tip" xml:space="preserve">直接透過 Windows Graphics Capture (FramePool) 擷取遊戲視窗畫面，不經過 ADB 截圖，相容 Android 11/12L/13/16 等各版本 WSA。
+支援多視窗同時執行不同伺服器客戶端，無需將遊戲拉伸鋪滿整個虛擬螢幕。</system:String>
+    <system:String x:Key="Connection.WSA.ExtrasInputEnabled">啟用 WSA 宿主 Win32 輸入（實驗功能）</system:String>
+    <system:String x:Key="Connection.WSA.ExtrasInputEnabled.Tip" xml:space="preserve">勾選後在觸控模式選擇 ｢WSA 增強觸控｣ 時直接向 WSA 視窗傳送 Win32 訊息。
+未勾選時預設使用 MaaTouch 並自動換算 WSA 自由視窗座標，相容所有背景操作。</system:String>
+    <system:String x:Key="Connection.WSA.WindowName">WSA 視窗標題（選填）</system:String>
+    <system:String x:Key="Connection.WSA.WindowName.Placeholder">留空自動依套件名稱 / AUMID 配對</system:String>
+    <system:String x:Key="Connection.WSA.WindowName.Tip" xml:space="preserve">通常無需填寫，MAA 會依目前客戶端套件名稱自動定位對應的 WSA 視窗。
+僅在多開同名視窗或自動配對失敗時填寫目標視窗標題。</system:String>
     <system:String x:Key="Copilot.Action.BulletTime">進入子彈時間</system:String>
     <system:String x:Key="Copilot.Action.CheckIfStartOver">檢查是否重開</system:String>
     <system:String x:Key="Copilot.Action.Click">點擊</system:String>

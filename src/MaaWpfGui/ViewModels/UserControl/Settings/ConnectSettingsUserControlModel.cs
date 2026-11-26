@@ -263,6 +263,7 @@ public class ConnectSettingsUserControlModel : PropertyChangedBase
         ConnectConfig.MuMuEmulator12 => _extras.Mumu12,
         ConnectConfig.PC => _extras.Win32,
         ConnectConfig.ModAVD => _extras.ModAvd,
+        ConnectConfig.WSA => _extras.Wsa,
         _ => null,
     };
 
@@ -277,6 +278,8 @@ public class ConnectSettingsUserControlModel : PropertyChangedBase
         public Models.EmulatorConnectionExtra.Win32Extra Win32 { get; set; } = new();
 
         public ModAvdExtra ModAvd { get; set; } = new();
+
+        public WsaExtra Wsa { get; set; } = new();
 
         public Bluestacks BluestacksExtra { get; set; } = new();
 
@@ -843,7 +846,8 @@ public class ConnectSettingsUserControlModel : PropertyChangedBase
         (TouchMode.MaaTouch, "Connection.TouchMode.MaaTouch"),
         (TouchMode.Adb, "Connection.TouchMode.AdbInput"),
         (TouchMode.MaaFwAdb, "Connection.TouchMode.MaaFwAdb"),
-        (TouchMode.ModAvdExtras, "Connection.TouchMode.ModAvdExtras"));
+        (TouchMode.ModAvdExtras, "Connection.TouchMode.ModAvdExtras"),
+        (TouchMode.WsaExtras, "Connection.TouchMode.WsaExtras"));
 
     public bool IsAdbTouchMode() => TouchMode == TouchMode.Adb;
 

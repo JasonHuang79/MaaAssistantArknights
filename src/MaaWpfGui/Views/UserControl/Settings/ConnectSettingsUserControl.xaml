@@ -301,6 +301,43 @@
                                 <controls:TooltipBlock TooltipText="{DynamicResource Connection.ModAVD.RootPath.Tip}" />
                             </StackPanel>
                         </DataTemplate>
+                        <DataTemplate DataType="{x:Type extra:WsaExtra}">
+                            <StackPanel d:DataContext="{d:DesignInstance {x:Type extra:WsaExtra}}">
+                                <StackPanel
+                                    Margin="5"
+                                    HorizontalAlignment="Center"
+                                    Orientation="Horizontal">
+                                    <CheckBox Content="{DynamicResource Connection.WSA.ExtrasEnabled}" IsChecked="{Binding Enable}" />
+                                    <controls:TooltipBlock TooltipText="{DynamicResource Connection.WSA.ExtrasEnabled.Tip}" />
+                                </StackPanel>
+                                <StackPanel
+                                    HorizontalAlignment="Center"
+                                    Orientation="Vertical"
+                                    Visibility="{c:Binding Enable}">
+                                    <StackPanel
+                                        Margin="5"
+                                        HorizontalAlignment="Center"
+                                        Orientation="Horizontal">
+                                        <CheckBox Content="{DynamicResource Connection.WSA.ExtrasInputEnabled}" IsChecked="{Binding EnableInput}" />
+                                        <controls:TooltipBlock TooltipText="{DynamicResource Connection.WSA.ExtrasInputEnabled.Tip}" />
+                                    </StackPanel>
+                                    <StackPanel
+                                        Margin="5"
+                                        HorizontalAlignment="Center"
+                                        Orientation="Horizontal">
+                                        <controls:TooltipBlock Visibility="Hidden" />
+                                        <hc:TextBox
+                                            Width="420"
+                                            Height="30"
+                                            hc:InfoElement.Placeholder="{DynamicResource Connection.WSA.WindowName.Placeholder}"
+                                            hc:TitleElement.Title="{DynamicResource Connection.WSA.WindowName}"
+                                            hc:TitleElement.TitlePlacement="Left"
+                                            Text="{Binding WindowName}" />
+                                        <controls:TooltipBlock TooltipText="{DynamicResource Connection.WSA.WindowName.Tip}" />
+                                    </StackPanel>
+                                </StackPanel>
+                            </StackPanel>
+                        </DataTemplate>
                         <DataTemplate DataType="{x:Type extra:Win32Extra}">
                             <StackPanel d:DataContext="{d:DesignInstance {x:Type extra:Win32Extra}}">
                                 <StackPanel

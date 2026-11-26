@@ -843,7 +843,7 @@ MAA를 독립된 새 폴더에 압축 해제하거나, MAA에 속하지 않는 D
     <system:String x:Key="Connection.Config.Nox">Nox</system:String>
     <system:String x:Key="Connection.Config.PC">명일방주 PC 클라이언트 (커뮤니티 유지보수)</system:String>
     <system:String x:Key="Connection.Config.SecondResolution">분할 화면</system:String>
-    <system:String x:Key="Connection.Config.WSA">WSA 레거시 버전</system:String>
+    <system:String x:Key="Connection.Config.WSA">WSA</system:String>
     <system:String x:Key="Connection.Config.XYAZ">MEmu</system:String>
     <system:String x:Key="Connection.ConnectFailed">연결 실패</system:String>
     <system:String x:Key="Connection.Connecting">에뮬레이터에 연결 중……</system:String>
@@ -944,12 +944,23 @@ C:\Program Files\Netease\MuMuPlayer으로 입력해야 합니다.
     <system:String x:Key="Connection.TouchMode.ModAvdExtras">ModAVD 터치 (실험적)</system:String>
     <system:String x:Key="Connection.TouchMode.MumuExtras">MuMu 터치 (실험적)</system:String>
     <system:String x:Key="Connection.TouchMode.Tip" xml:space="preserve">ADB Input는 OS 버전이 낮은 물리적 기기 전용입니다. 다른 모드를 사용할 수 있다면 ADB Input를 선택하지 마세요.&#10;ADB Input 스와이프는 오프셋이 발생하기 쉬워 스와이프 속도가 매우 느리게 설정되고 스와이프 거리도 다른 모드와 다릅니다. 정확한 좌표 제어가 필요한 상황에서는 사용할 수 없습니다.&#10;&#10;MaaFwAdb는 추가 스와이프를 지원하지 않아, 추가 스와이프로 드래그 과다를 방지하는 페이지는 이 모드에서 과다하게 드래그됩니다.&#10;추가 스와이프는 메인 스와이프가 끝난 후 수직 방향으로 짧게 덧붙이는 ｢브레이크｣ 스와이프(궤적이 90° 꺾이는 L자 형태)로, 목록 관성을 상쇄하는 데 사용됩니다.</system:String>
+    <system:String x:Key="Connection.TouchMode.WsaExtras">WSA 터치 (실험적)</system:String>
     <system:String x:Key="Connection.TryToReconnectByAdb">재접속을 시도하고 있습니다</system:String>
     <system:String x:Key="Connection.TryToStartEmulator">에뮬레이터를 시작하는 중입니다</system:String>
     <system:String x:Key="Connection.TryToStartPcClient">PC 클라이언트를 시작하는 중입니다</system:String>
     <system:String x:Key="Connection.UnzipFailed.Message">파일 압축 해제에 실패했습니다. 예기치 않은 오류가 발생했습니다. 자세한 내용은 로그를 확인하세요.</system:String>
     <system:String x:Key="Connection.WindowMinimize">창 최소화</system:String>
     <system:String x:Key="Connection.WindowRestore">창 복원</system:String>
+    <system:String x:Key="Connection.WSA.ExtrasEnabled">WSA 창 스크린샷 향상 활성화</system:String>
+    <system:String x:Key="Connection.WSA.ExtrasEnabled.Tip" xml:space="preserve">ADB 스크린샷을 거치지 않고 Windows Graphics Capture (FramePool)로 게임 창을 직접 캡처하며 Android 11/12L/13/16 WSA를 모두 지원합니다.
+여러 서버 클라이언트를 별도 창으로 동시 실행할 수 있으며 가상 화면 전체로 늘릴 필요가 없습니다.</system:String>
+    <system:String x:Key="Connection.WSA.ExtrasInputEnabled">WSA 호스트 Win32 입력 활성화 (실험적)</system:String>
+    <system:String x:Key="Connection.WSA.ExtrasInputEnabled.Tip" xml:space="preserve">체크하고 「WSA 터치」를 선택하면 WSA 창으로 Win32 입력 메시지를 직접 전송합니다.
+해제 시 MaaTouch를 사용하며 WSA 프리폼 창 좌표를 자동으로 변환합니다.</system:String>
+    <system:String x:Key="Connection.WSA.WindowName">WSA 창 제목 (선택)</system:String>
+    <system:String x:Key="Connection.WSA.WindowName.Placeholder">비워 두면 패키지명 / AUMID로 자동 일치</system:String>
+    <system:String x:Key="Connection.WSA.WindowName.Tip" xml:space="preserve">보통 비워 두면 선택한 클라이언트의 패키지명으로 WSA 창을 자동 탐색합니다.
+같은 제목의 창이 여러 개이거나 자동 일치가 실패할 때만 입력하세요.</system:String>
     <system:String x:Key="Copilot.Action.BulletTime">슬로우 모션 진입</system:String>
     <system:String x:Key="Copilot.Action.CheckIfStartOver">재시작 여부 확인</system:String>
     <system:String x:Key="Copilot.Action.Click">클릭</system:String>

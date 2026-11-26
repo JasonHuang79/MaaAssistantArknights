@@ -130,9 +130,9 @@
         },
         {
             "configName": "WSA",
-            "baseConfig": "CapWithShell",
-            "display": "[Adb] -s [AdbSerial] shell \"wm size -d [DisplayId] | grep -o -E [0-9]+\"",
+            "baseConfig": "General",
             "displayId": "[Adb] -s [AdbSerial] shell \"dumpsys display | grep mUniqueId=virtual:com.microsoft.windows.systemapp:[PackageName]\"",
+            "display": "[Adb] -s [AdbSerial] shell \"wm size -d [DisplayId] | grep -o -E [0-9]+\"",
             "click": "[Adb] -s [AdbSerial] shell input -d [DisplayId] tap [x] [y]",
             "swipe": "[Adb] -s [AdbSerial] shell input -d [DisplayId] swipe [x1] [y1] [x2] [y2] [duration]"
         },

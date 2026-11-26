@@ -17,6 +17,7 @@ enum class ControllerType
     MacPlayTools,
 #ifdef _WIN32
     Win32,
+    Wsa,
 #endif
     MaaFwAdb,
     ModAvd,
